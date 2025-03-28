@@ -23,10 +23,6 @@ money = 0
 
 def coins(x):
     global money
-    dime = 0
-    nickle = 0
-    quarter = 0
-    pennie = 0 
     
     print("Please insert coins.")
     quarter = float(input("How many quarters?: ")) * 0.25
@@ -34,31 +30,30 @@ def coins(x):
     nickle = float(input("How many nickles?: ")) * 0.05
     pennie = float(input("How many pennies?: ")) * 0.01
     total = sum([quarter,dime,nickle,pennie])   
-    if total < x:
-        print(f"Sorry that's not enough money. You entered {round(total,2)}, but need {round(x - total,2)} more. Money refunded.")
+    if total < x["cost"]:
+        print(f"Sorry that's not enough money. You entered {round(total,2)}, but need {round(x["cost"] - total,2)} more. Money refunded.")
     else:
-        money += x
-        print(f"Here is ${round(total - x,2)} in change.")
+        money += x["cost"]
+        print(f"Here is ${round(total - x["cost"],2)} in change.")
     
 
 def coffee_order(order):
     global water, milk, coffee, money  # Declare these as global
     match order:
         case "espresso":
-            print("You ordered an Espresso ☕")
             
             if MENU["espresso"]["ingredients"]["water"] > water:
                 print("Sorry not enough water")
             elif MENU["espresso"]["ingredients"]["coffee"] > coffee:
                 print("Sorry not enough water")
             else:
-                coins(MENU["espresso"]["cost"])
+                coins(MENU["espresso"])
                 water -= MENU["espresso"]["ingredients"]["water"]
                 coffee -= MENU["espresso"]["ingredients"]["coffee"]
-                
+                print("You ordered an Espresso ☕")
+               
             
         case "latte":
-            print("You ordered a Latte 🥛☕")
             
             if MENU["latte"]["ingredients"]["water"] > water:
                 print("Sorry not enough water")
@@ -67,13 +62,14 @@ def coffee_order(order):
             elif MENU["latte"]["ingredients"]["coffee"] > coffee:
                 print("Sorry not enough water")
             else:
-                coins(MENU["latte"]["cost"])
+                coins(MENU["latte"])
                 water -= MENU["latte"]["ingredients"]["water"]
                 milk -= MENU["latte"]["ingredients"]["milk"]
                 coffee -= MENU["latte"]["ingredients"]["coffee"]
-                              
+                print("You ordered a Latte 🥛☕")
+                  
         case "cappuccino":
-            print("You ordered a Cappuccino ☁☕")
+
             
             if MENU["cappuccino"]["ingredients"]["water"] > water:
                 print("Sorry not enough water")
@@ -82,11 +78,12 @@ def coffee_order(order):
             elif MENU["cappuccino"]["ingredients"]["coffee"] > coffee:
                 print("Sorry not enough water")
             else:
-                coins(MENU["cappuccino"]["cost"])
+                coins(MENU["cappuccino"])
                 water -= MENU["cappuccino"]["ingredients"]["water"]
                 milk -= MENU["cappuccino"]["ingredients"]["milk"]
                 coffee -= MENU["cappuccino"]["ingredients"]["coffee"]
-            
+                print("You ordered a Cappuccino ☁☕")   
+                     
         case "off":
             print("Shutting down... 📴")
             exit()
@@ -95,6 +92,10 @@ def coffee_order(order):
             print(f"Milk: {milk}ml.")  
             print(f"Coffee: {coffee}g.")
             print(f"Money: ${money}")
+        case "refill":
+            milk = 200
+            water = 300
+            coffee = 100
         case _:
             print("Sorry, we don't have that. 😕")
 
@@ -104,7 +105,7 @@ while True:
     userprompt = input("What would you like? (espresso / latte / cappuccino): ").lower()
     
     """Check whether input is valid"""
-    while userprompt not in ['espresso', 'latte', 'cappuccino', 'off', 'report']:
+    while userprompt not in ['espresso', 'latte', 'cappuccino', 'off', 'report', 'refill']:
         userprompt = input("Sorry, we don't have that. (espresso / latte / cappuccino): ").lower()
     
     coffee_order(userprompt)
